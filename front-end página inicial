@@ -1,174 +1,234 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apollo Logística</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo Logística</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background: #f0f2f7; }
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
+    /* HEADER */
+    header { background: #0a1f44; color: white; padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .header-brand h1 { font-size: 32px; font-weight: 700; letter-spacing: 1px; }
+    .header-brand p { font-size: 13px; color: #a8c0e8; margin-top: 4px; letter-spacing: 0.5px; }
+    .login-btn { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.6); padding: 9px 22px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.2s; }
+    .login-btn:hover { background: rgba(255,255,255,0.12); border-color: white; }
 
-        header {
-            background-color: #0a1f44;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    /* NAV */
+    nav { background: #132c63; padding: 0 40px; display: flex; justify-content: center; gap: 8px; }
+    nav a { color: #a8c0e8; padding: 14px 18px; text-decoration: none; font-size: 14px; font-weight: 500; border-bottom: 3px solid transparent; display: inline-block; transition: all 0.2s; }
+    nav a:hover { color: white; border-bottom-color: #4a8fe8; }
 
-        nav {
-            background-color: #132c63;
-            padding: 10px;
-            text-align: center;
-        }
+    /* HERO */
+    .hero { background: #0a1f44; padding: 60px 40px 40px; text-align: center; }
+    .hero-badge { display: inline-block; background: #1e3a6e; color: #a8c0e8; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .hero h2 { color: white; font-size: 34px; font-weight: 700; margin-bottom: 12px; }
+    .hero p { color: #a8c0e8; font-size: 15px; max-width: 520px; margin: 0 auto 28px; line-height: 1.8; }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; }
+    .btn-primary { background: #2563eb; color: white; padding: 12px 28px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+    .btn-outline { background: transparent; color: white; padding: 12px 28px; border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px; font-size: 15px; cursor: pointer; }
 
-        nav a {
-            color: white;
-            margin: 10px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    /* STATS BAR */
+    .stats-bar { background: #132c63; display: flex; justify-content: center; }
+    .stat { padding: 20px 48px; text-align: center; border-right: 1px solid rgba(255,255,255,0.1); }
+    .stat:last-child { border-right: none; }
+    .stat-num { font-size: 26px; font-weight: 700; color: white; }
+    .stat-label { font-size: 12px; color: #a8c0e8; margin-top: 2px; }
 
-        section {
-            padding: 20px;
-            margin: 20px;
-            background-color: white;
-            border-radius: 10px;
-        }
+    /* LAYOUT */
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+    .section-card { background: white; border-radius: 16px; padding: 36px; margin-bottom: 28px; border: 0.5px solid #e2e8f0; }
+    .section-card h2 { color: #0a1f44; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .section-subtitle { color: #64748b; font-size: 12px; margin-bottom: 20px; font-weight: 600; letter-spacing: 0.5px; }
+    .section-card > p { color: #475569; font-size: 15px; line-height: 1.8; }
 
-        h2 {
-            color: #0a1f44;
-        }
+    /* COMO FUNCIONA */
+    .how-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+    .how-item { background: #f0f4ff; border-radius: 12px; padding: 20px; border: 0.5px solid #c7d7f5; }
+    .how-icon { width: 40px; height: 40px; background: #0a1f44; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .how-icon svg { width: 20px; height: 20px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .how-item h4 { color: #0a1f44; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .how-item p { color: #64748b; font-size: 13px; line-height: 1.6; }
 
-        .equipe {
-            display: flex;
-            gap: 80px;
-        }
+    /* EQUIPE */
+    .team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+    .team-card { background: #f8fafc; border-radius: 14px; padding: 24px 16px; text-align: center; border: 0.5px solid #e2e8f0; transition: border-color 0.2s; }
+    .team-card:hover { border-color: #94b4e8; }
+    .avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; margin: 0 auto 14px; border: 3px solid white; outline: 2px solid #c7d7f5; }
+    .avatar-jr { background: #1e3a6e; color: #a8c0e8; }
+    .avatar-vm { background: #1d4ed8; color: #bfdbfe; }
+    .avatar-cr { background: #1510a1; color: #99f6e4; }
+    .avatar-pa { background: #701492; color: #ddd6fe; }
+    .avatar-la { background: #8e1111; color: #d1fae5; }
+    .team-card h4 { color: #0a1f44; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .team-role { display: inline-block; background: #e0eaff; color: #1e3a6e; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px; }
+    .team-card p.bio { color: #64748b; font-size: 12px; margin-top: 10px; line-height: 1.5; }
 
-        .membro {
-            background-color: #eaeaea;
-            padding: 10px;
-            border-radius: 8px;
-            width: 150px;
-            text-align: center;
-        }
+    /* CADASTRO */
+    .cadastro-section { background: white; border-radius: 16px; padding: 40px; margin-bottom: 28px; border: 0.5px solid #e2e8f0; text-align: center; }
+    .cadastro-section h2 { color: #0a1f44; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .cadastro-section > p { color: #64748b; font-size: 14px; margin-top: 6px; }
+    .form-inner { max-width: 360px; margin: 24px auto 0; text-align: left; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 11px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 15px; color: #111; outline: none; transition: border-color 0.2s; }
+    .field input:focus { border-color: #2563eb; }
+    .btn-cadastrar { width: 100%; background: #0a1f44; color: white; padding: 13px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; margin-top: 4px; transition: background 0.2s; }
+    .btn-cadastrar:hover { background: #132c63; }
+    .login-link { display: block; text-align: center; margin-top: 14px; font-size: 13px; color: #64748b; }
+    .login-link a { color: #2563eb; font-weight: 600; text-decoration: none; }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 250px;
-        }
+    /* FOOTER */
+    footer { background: #0a1f44; color: #a8c0e8; text-align: center; padding: 24px; font-size: 13px; }
+    footer span { color: white; font-weight: 600; }
 
-        input {
-            margin-bottom: 10px;
-            padding: 8px;
-        }
-
-        button {
-            background-color: #0a1f44;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #132c63;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #0a1f44;
-            color: white;
-        }
-    </style>
+    /* RESPONSIVO */
+    @media (max-width: 640px) {
+      header { padding: 20px; flex-wrap: wrap; gap: 12px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-bar { flex-wrap: wrap; }
+      .stat { padding: 16px 24px; }
+    }
+  </style>
 </head>
-
 <body>
 
 <header>
-    <h1>Apollo</h1>
-    <p>Soluções inteligentes em lógistica </p>
+  <div class="header-brand">
+    <h1>APOLLO</h1>
+    <p>Soluções inteligentes em logística</p>
+  </div>
+  <button class="login-btn">Entrar</button>
 </header>
 
 <nav>
-    <a href="#sobre">Sobre</a>
-    <a href="#como">Como Funciona</a>
-    <a href="#equipe">Equipe</a>
-    <a href="#cadastro de novo usuário ">Cadastro de novo usuário</a>
+  <a href="#o que fazemos">O que fazemos</a>
+  <a href="#como">Como Funciona</a>
+  <a href="#equipe">Equipe</a>
+  <a href="#cadastro">Cadastro</a>
 </nav>
 
-<section id="sobre">
+<div class="hero">
+  <div class="hero-badge">Tecnologia no setor de logistíca </div>
+  <h2>Logística mais inteligente,<br>operação mais eficiente</h2>
+  <p>Monitore entradas e saídas, analise seu estoque em tempo real e reduza custos com a plataforma da Apollo.</p>
+  <div class="hero-btns">
+    
+    
+  </div>
+</div>
+
+<div class="stats-bar">
+
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-card" id="sobre">
     <h2>O que fazemos</h2>
-    <p>
-         Apollo é uma startup focada no desenvolvimento de soluções inovadoras para otimizar a cadeia de suprimentos. 
-        Nosso objetivo é transformar a logística tradicional, utilizando tecnologia de ponta para melhorar a eficiência e reduzir custos 
-        para os nossos clientes.
-    </p>
-</section>
+    <div class="section-subtitle">NOSSA MISSÃO</div>
+    <p>A Apollo é uma startup focada no desenvolvimento de soluções inovadoras para otimizar a cadeia de suprimentos. Nosso objetivo é transformar a logística tradicional, utilizando tecnologia de ponta para melhorar a eficiência e reduzir custos para os nossos clientes.</p>
+  </div>
 
-<section id="como">
+  <div class="section-card" id="como">
     <h2>Como fazemos</h2>
-    <p>
-        Utilizamos sistemas inteligentes que possibilitam o cadastro da entrada e saída de produtos no sistema, possibilitando
-        monitoramento em tempo real e análise de dados para otimizar a operação. Nossa plataforma é projetada para ser fácil de usar,
-        permitindo que as empresas gerenciem suas operações de forma mais eficiente.
-        Através de análises do estoque conseguimos aumentar a eficiência e reduzir custos, garantindo que nossos clientes tenham uma vantagem 
-        competitiva no mercado.
-    </p>
-</section>
-
-<section id="equipe">
-    <h2>Equipe</h2>
-
-    <div class="equipe">
-        <div class="membro">
-            <h4>José Reis </h4>
-            <p>front-end</p>
+    <div class="section-subtitle">NOSSA PLATAFORMA</div>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
         </div>
-
-        <div class="membro">
-            <h4>Vinicius Marques </h4>
-            <p>back-end</p>
-            <h4>Carla Rio</h4>
-            <p>back-end</p>
-            
+        <h4>Cadastro de produtos</h4>
+        <p>Registre entradas e saídas com facilidade e precisão.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         </div>
-
-        <div class="membro">
-            <h4>Pedro Antônio </h4>
-            <p>visão computacional</p>
-
-        
-
-             
-
+        <h4>Monitoramento em tempo real</h4>
+        <p>Acompanhe o estoque com dados atualizados ao vivo.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
-        </div>
+        <h4>Análise e eficiência</h4>
+        <p>reduzir custos e otimizar processos.</p>
+      </div>
     </div>
-</section>
+  </div>
 
-<section id="cadastro de novo usuário ">
-    <h2>Cadastro de novo Usuário</h2>
+  <div class="section-card" id="equipe">
+    <h2>Nossa equipe</h2>
+    <div class="section-subtitle">AS PESSOAS POR TRÁS DA APOLLO</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <!-- Para adicionar foto real: substitua a div.avatar por <img src="foto-jose.jpg" class="avatar" style="object-fit:cover"> -->
+        <div class="avatar avatar-jr">JR</div>
+        <h4>José Reis</h4>
+        <span class="team-role">Front-end</span>
+        <p class="bio">Interfaces modernas e experiência do usuário.</p>
+      </div>
+      <div class="team-card">
+        <div class="avatar avatar-vm">VM</div>
+        <h4>Vinicius Marques</h4>
+        <span class="team-role">Back-end</span>
+        <p class="bio">Arquitetura de sistemas e APIs robustas.</p>
+      </div>
+      <div class="team-card">
+        <div class="avatar avatar-cr">CR</div>
+        <h4>Carla Rio</h4>
+        <span class="team-role">Back-end</span>
+        <p class="bio">Banco de dados e infraestrutura em nuvem.</p>
+      </div>
+      <div class="team-card">
+        <div class="avatar avatar-la">LA</div>
+        <h4>Lauro Aguiar </h4>
+        <span class="team-role">Back-end</span>
+        <p class="bio">Banco de dados e infraestrutura em nuvem.</p>
 
-    <form>
-        <label>Usuário:</label>
-        <input type="text" placeholder="Digite seu usuário" required>
+      </div>
+      <div class="team-card">
+        <div class="avatar avatar-pa">PA</div>
+        <h4>Pedro Antônio</h4>
+        <span class="team-role">Visão Computacional</span>
+        <p class="bio">IA e reconhecimento de imagem aplicados à logística.</p>
+      </div>
+    </div>
+  </div>
 
-        <label>Senha:</label>
-        <input type="password" placeholder="Digite sua senha" required>
+  <div class="cadastro-section" id="cadastro">
+    <h2>Cadastro de novo usuário</h2>
+    <p>Crie sua conta e comece a usar a plataforma Apollo.</p>
+    <div class="form-inner">
+      <div class="field">
+        <label>Usuário</label>
+        <input type="text" placeholder="Digite seu usuário">
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" placeholder="seu@email.com">
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" placeholder="Crie uma senha segura">
+      </div>
+      <div class="field">
+        <label>Confirmar Senha</label>
+        <input type="password" placeholder=" digite a sua senha novamente">
+      </div>
+      <button class="btn-cadastrar">Criar conta</button>
+      <span class="login-link">Já tem conta? <a href="#">Entrar agora</a></span>
+    </div>
+  </div>
 
-        <button type="submit">Cadastrar</button>
-    </form>
-</section>
+</div>
 
 <footer>
-    <p>© 2026 Apollo Logística - Todos os direitos reservados</p>
+  <p>© 2026 <span>Apollo Logística</span> — Todos os direitos reservados</p>
 </footer>
 
 </body>
