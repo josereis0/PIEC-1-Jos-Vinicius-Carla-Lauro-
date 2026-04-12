@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo Logística — Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background: #f0f2f7; }
+
+    .topbar { background: #0a1f44; color: white; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-left span { font-size: 13px; color: #a8c0e8; }
+
+    .page { padding: 24px 28px; }
+
+    .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .card { background: white; border-radius: 12px; padding: 18px 20px; border: 0.5px solid #e2e8f0; }
+    .card-label { font-size: 12px; color: #64748b; font-weight: 600; letter-spacing: 0.4px; margin-bottom: 8px; }
+    .card-value { font-size: 28px; font-weight: 700; color: #0a1f44; }
+    .card-sub { font-size: 12px; margin-top: 4px; }
+    .card-green .card-value { color: #15803d; }
+    .card-blue .card-value { color: #1d4ed8; }
+    .card-red .card-value { color: #b91c1c; }
+    .card-amber .card-value { color: #b45309; }
+
+    .section { background: white; border-radius: 12px; border: 0.5px solid #e2e8f0; margin-bottom: 22px; overflow: hidden; }
+    .section-header { padding: 16px 20px; border-bottom: 0.5px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+    .section-header h2 { font-size: 15px; font-weight: 700; color: #0a1f44; }
+
+    .alerta-list { padding: 4px 20px 8px; }
+    .alerta-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid #f1f5f9; }
+    .alerta-item:last-child { border-bottom: none; }
+    .alerta-info { display: flex; align-items: center; gap: 12px; }
+    .alerta-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-red { background: #ef4444; }
+    .dot-amber { background: #f59e0b; }
+    .alerta-name { font-size: 14px; font-weight: 600; color: #0a1f44; }
+    .alerta-cat { font-size: 12px; color: #64748b; }
+    .alerta-qty { font-size: 14px; font-weight: 700; color: #b91c1c; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: 0.4px; border-bottom: 0.5px solid #e2e8f0; }
+    td { padding: 11px 16px; font-size: 13px; color: #1e293b; border-bottom: 0.5px solid #f1f5f9; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+    .badge-entrada { background: #dcfce7; color: #15803d; }
+    .badge-saida { background: #fee2e2; color: #b91c1c; }
+
+    .form-section { padding: 20px; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 12px; font-weight: 700; color: #374151; letter-spacing: 0.3px; }
+    .field input, .field select { padding: 9px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #111; background: white; outline: none; transition: border-color 0.2s; }
+    .field input:focus, .field select:focus { border-color: #2563eb; }
+
+    .form-btns { display: flex; gap: 10px; }
+    .btn-entrada { background: #15803d; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-saida { background: #b91c1c; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-entrada:hover { background: #166534; }
+    .btn-saida:hover { background: #991b1b; }
+
+    .tag-low { color: #b91c1c; font-weight: 700; }
+    .tag-ok { color: #15803d; font-weight: 600; }
+
+    footer { background: #0a1f44; color: #a8c0e8; text-align: center; padding: 18px; font-size: 13px; margin-top: 8px; }
+    footer span { color: white; font-weight: 600; }
+
+    @media (max-width: 700px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: 1fr; }
+      .page { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>APOLLO</h1>
+    <span>Dashboard de Estoque</span>
+  </div>
+  <span id="data-atual" style="font-size:13px;color:#a8c0e8"></span>
+</div>
+
+<div class="page">
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">TOTAL DE PRODUTOS</div>
+      <div class="card-value" id="total-produtos">0</div>
+      <div class="card-sub" style="color:#64748b">itens cadastrados</div>
+    </div>
+    <div class="card card-green">
+      <div class="card-label">ENTRADAS HOJE</div>
+      <div class="card-value" id="total-entradas">0</div>
+      <div class="card-sub" style="color:#15803d">unidades recebidas</div>
+    </div>
+    <div class="card card-red">
+      <div class="card-label">SAÍDAS HOJE</div>
+      <div class="card-value" id="total-saidas">0</div>
+      <div class="card-sub" style="color:#b91c1c">unidades despachadas</div>
+    </div>
+    <div class="card card-amber">
+      <div class="card-label">ESTOQUE BAIXO</div>
+      <div class="card-value" id="total-baixo">0</div>
+      <div class="card-sub" style="color:#b45309">produtos abaixo do limite</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Registrar movimentação</h2>
+    </div>
+    <div class="form-section">
+      <div class="form-grid">
+        <div class="field">
+          <label>CÓDIGO DO PRODUTO</label>
+          <input type="text" id="f-codigo" placeholder="Ex: PRD-001">
+        </div>
+        <div class="field">
+          <label>NOME DO PRODUTO</label>
+          <input type="text" id="f-nome" placeholder="Ex: Caixa de papelão">
+        </div>
+     
+        <div class="field">
+          <label>QUANTIDADE</label>
+          <input type="number" id="f-qtd" placeholder="0" min="1">
+        </div>
+        <div class="field">
+          <label>DATA</label>
+          <input type="date" id="f-data">
+        </div>
+        <div class="field">
+          <label>ESTOQUE MÍNIMO</label>
+          <input type="number" id="f-minimo" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="form-btns">
+        <button class="btn-entrada" onclick="registrar('entrada')">+ Registrar Entrada</button>
+        <button class="btn-saida" onclick="registrar('saida')">− Registrar Saída</button>
+      </div>
+      <div id="msg" style="margin-top:10px;font-size:13px;font-weight:600"></div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-alertas" style="display:none">
+    <div class="section-header">
+      <h2>Estoque baixo</h2>
+      <span style="font-size:12px;color:#b91c1c;font-weight:700" id="alerta-count"></span>
+    </div>
+    <div class="alerta-list" id="alerta-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Movimentações</h2>
+      <div style="display:flex;gap:8px">
+        <select id="filtro-tipo" onchange="renderTabela()" style="font-size:12px;padding:5px 10px;border:0.5px solid #d1d5db;border-radius:6px;color:#374151;background:white">
+          <option value="">Todos</option>
+          <option value="entrada">Entradas</option>
+          <option value="saida">Saídas</option>
+        </select>
+        <select id="filtro-cat" onchange="renderTabela()" style="font-size:12px;padding:5px 10px;border:0.5px solid #d1d5db;border-radius:6px;color:#374151;background:white">
+          <option value="">Todas categorias</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th>Qtd</th>
+            <th>Estoque atual</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-body">
+          <tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:28px">Nenhuma movimentação registrada ainda.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>Apollo Logística</span> — Todos os direitos reservados</p>
+</footer>
+
+<script>
+  const hoje = new Date();
+  document.getElementById('data-atual').textContent = hoje.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  document.getElementById('f-data').value = hoje.toISOString().split('T')[0];
+
+  let movs = [];
+  let estoque = {};
+
+  function registrar(tipo) {
+    const cod = document.getElementById('f-codigo').value.trim();
+    const nome = document.getElementById('f-nome').value.trim();
+    const cat = document.getElementById('f-categoria').value;
+    const qtd = parseInt(document.getElementById('f-qtd').value);
+    const data = document.getElementById('f-data').value;
+    const min = parseInt(document.getElementById('f-minimo').value) || 0;
+    const msg = document.getElementById('msg');
+
+    if (!cod || !nome || !cat || !qtd || qtd < 1 || !data) {
+      msg.style.color = '#b91c1c';
+      msg.textContent = 'Preencha todos os campos obrigatórios.';
+      return;
+    }
+
+    if (!estoque[cod]) estoque[cod] = { nome, cat, atual: 0, min };
+    estoque[cod].min = min;
+
+    if (tipo === 'entrada') {
+      estoque[cod].atual += qtd;
+    } else {
+      if (estoque[cod].atual < qtd) {
+        msg.style.color = '#b91c1c';
+        msg.textContent = 'Quantidade insuficiente em estoque!';
+        return;
+      }
+      estoque[cod].atual -= qtd;
+    }
+
+    movs.unshift({ cod, nome, cat, tipo, qtd, atual: estoque[cod].atual, data });
+
+    msg.style.color = tipo === 'entrada' ? '#15803d' : '#b91c1c';
+    msg.textContent = tipo === 'entrada' ? 'Entrada registrada com sucesso!' : 'Saída registrada com sucesso!';
+    setTimeout(() => msg.textContent = '', 2500);
+
+    document.getElementById('f-codigo').value = '';
+    document.getElementById('f-nome').value = '';
+    document.getElementById('f-categoria').value = '';
+    document.getElementById('f-qtd').value = '';
+    document.getElementById('f-minimo').value = '';
+
+    atualizarFiltros();
+    renderTabela();
+    renderCards();
+    renderAlertas();
+  }
+
+  function renderCards() {
+    const todayStr = hoje.toISOString().split('T')[0];
+    const todayMovs = movs.filter(m => m.data === todayStr);
+    document.getElementById('total-produtos').textContent = Object.keys(estoque).length;
+    document.getElementById('total-entradas').textContent = todayMovs.filter(m => m.tipo === 'entrada').reduce((s, m) => s + m.qtd, 0);
+    document.getElementById('total-saidas').textContent = todayMovs.filter(m => m.tipo === 'saida').reduce((s, m) => s + m.qtd, 0);
+    const baixo = Object.values(estoque).filter(e => e.atual <= e.min).length;
+    document.getElementById('total-baixo').textContent = baixo;
+  }
+
+  function renderAlertas() {
+    const baixos = Object.entries(estoque).filter(([, e]) => e.atual <= e.min);
+    const sec = document.getElementById('sec-alertas');
+    if (baixos.length === 0) { sec.style.display = 'none'; return; }
+    sec.style.display = 'block';
+    document.getElementById('alerta-count').textContent = baixos.length + ' produto(s)';
+    document.getElementById('alerta-list').innerHTML = baixos.map(([cod, e]) => `
+      <div class="alerta-item">
+        <div class="alerta-info">
+          <div class="alerta-dot ${e.atual === 0 ? 'dot-red' : 'dot-amber'}"></div>
+          <div>
+            <div class="alerta-name">${e.nome}</div>
+            <div class="alerta-cat">${cod} · ${e.cat}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="alerta-qty">${e.atual} un.</div>
+          <div style="font-size:11px;color:#94a3b8">mín: ${e.min}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function atualizarFiltros() {
+    const sel = document.getElementById('filtro-cat');
+    const cats = [...new Set(movs.map(m => m.cat))];
+    const atual = sel.value;
+    sel.innerHTML = '<option value="">Todas categorias</option>' + cats.map(c => `<option ${c === atual ? 'selected' : ''}>${c}</option>`).join('');
+  }
+
+  function renderTabela() {
+    const tipo = document.getElementById('filtro-tipo').value;
+    const cat = document.getElementById('filtro-cat').value;
+    const lista = movs.filter(m => (!tipo || m.tipo === tipo) && (!cat || m.cat === cat));
+    const tbody = document.getElementById('tabela-body');
+    if (lista.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:28px">Nenhuma movimentação encontrada.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(m => `
+      <tr>
+        <td style="font-family:monospace;font-size:12px;color:#64748b">${m.cod}</td>
+        <td style="font-weight:600">${m.nome}</td>
+        <td>${m.cat}</td>
+        <td><span class="badge badge-${m.tipo}">${m.tipo === 'entrada' ? '▲ Entrada' : '▼ Saída'}</span></td>
+        <td style="font-weight:700">${m.qtd}</td>
+        <td class="${m.atual <= (estoque[m.cod]?.min || 0) ? 'tag-low' : 'tag-ok'}">${m.atual}</td>
+        <td style="color:#64748b">${new Date(m.data + 'T12:00:00').toLocaleDateString('pt-BR')}</td>
+      </tr>`).join('');
+  }
+</script>
+
+</body>
+</html>
