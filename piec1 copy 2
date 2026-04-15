@@ -1,0 +1,63 @@
+import cv2
+from PIL import Image
+from pyzbar.pyzbar import decode as lerqrcode
+from qrcode import QRCode as GerarQRCode
+
+def ler_qrcode_camera():
+    # Inicializa a captura de vídeo (0 é geralmente a webcam padrão do notebook/PC)
+    cap = cv2.VideoCapture(0)
+
+    # Inicializa o detector de QR Code do OpenCV
+    detector = cv2.QRCodeDetector()
+
+    print("Câmera aberta. Aponte um QR Code para a câmera.")
+    print("Pressione a tecla 'q' na janela do vídeo para sair.")
+
+    while True:
+        # Lê o frame atual da câmera
+        sucesso, frame = cap.read()
+
+        # Se não conseguiu ler a imagem da câmera, encerra o loop
+        if not sucesso:
+            print("Erro ao acessar a câmera.")
+            break
+
+        # Detecta e decodifica o QR Code no frame atual
+        dados, bbox, _ = detector.detectAndDecode(frame)
+
+        # Se encontrou algum dado (ou seja, leu um QR Code com sucesso)
+        if dados:
+            print(f"QR Code detectado! Conteúdo: {dados}")
+            break
+            # Opcional: Desenha um contorno verde ao redor do QR Code na tela
+            #if bbox is not None:
+                # O 'bbox' retorna as 4 pontas do quadrado do QR Code
+                #for i in range(len(bbox[0])):
+                    #pt1 = tuple(map(int, bbox[0][i]))
+                    #pt2 = tuple(map(int, bbox[0][(i+1) % 4]))
+                    #cv2.line(frame, pt1, pt2, color=(0, 255, 0), thickness=2)
+            
+            # Escreve o texto lido na própria tela do vídeo
+            #cv2.putText(frame, dados, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        
+        # Mostra a imagem da câmera em uma janela na sua tela
+        cv2.imshow("Leitor de QR Code", frame)
+
+        # Aguarda 1 milissegundo e verifica se a tecla 'q' foi pressionada para encerrar
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            print("Encerrando o leitor...")
+            break
+
+    # Libera o uso da câmera e fecha a janela do Windows/Mac/Linux
+    cap.release()
+    cv2.destroyAllWindows()
+
+# Executa o programa
+if __name__ == "__main__":
+    ler_qrcode_camera()
+      
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    ler_qrcode_camera()
