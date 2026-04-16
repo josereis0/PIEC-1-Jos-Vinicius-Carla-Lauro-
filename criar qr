@@ -5,11 +5,28 @@ import qrcode
 import datetime 
 
 produto_a_ser_criado = input("Digite o nome do produto para criar o QR Code: ").upper()
-print(f"{produto_a_ser_criado}")
 
+# 1. Captura a data e hora atuais
+agora = datetime.datetime.now()
+
+# 2. Formata a data e a hora (Ex: 15/04/2026 19:02:45)
+data_formatada = agora.strftime("%d/%m/%Y")
+
+# 3. Junta o nome do produto com a data e hora em uma única variável de texto
+# O "\n" serve para quebrar a linha na hora que o leitor mostrar o texto
+dados_para_qr = f"Produto: {produto_a_ser_criado}\nRegistrado em: {data_formatada}"
+
+print(f"\nGerando QR Code com os seguintes dados:\n{dados_para_qr}\n")
+
+# Configuração do QR Code
 qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
-qr.add_data(produto_a_ser_criado)
+
+# 4. Adiciona a nossa variável combinada (dados_para_qr) no QR Code
+qr.add_data(dados_para_qr)
 qr.make(fit=True)
 
+# Gera e salva a imagem
 image = qr.make_image(fill_color="black", back_color="white")
 image.save("qrcode.png")
+
+print("QR Code criado e salvo como 'qrcode.png' com sucesso!")
