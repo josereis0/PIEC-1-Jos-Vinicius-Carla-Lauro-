@@ -5,6 +5,7 @@ import qrcode
 import datetime 
 
 produto_a_ser_criado = input("Digite o nome do produto para criar o QR Code: ").upper()
+produto_a_ser_criado = produto_a_ser_criado.strip().replace(" ", "_")  # Remove espaços extras no início e no final
 
 # 1. Captura a data e hora atuais
 agora = datetime.datetime.now()
@@ -27,6 +28,6 @@ qr.make(fit=True)
 
 # Gera e salva a imagem
 image = qr.make_image(fill_color="black", back_color="white")
-image.save("qrcode.png")
+image.save(f"QRCODE_{produto_a_ser_criado}.png")
 
 print("QR Code criado e salvo como 'qrcode.png' com sucesso!")
